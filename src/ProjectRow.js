@@ -10,7 +10,7 @@ class ProjectRow extends Component {
 
     componentDidMount() {
       const key = this.props.project.k;
-      fetch('/api/measures/component?componentKey=' + key + '&metricKeys=ncloc,complexity,violations')
+      fetch('/api/measures/component?componentKey=' + key + '&metricKeys=ncloc,complexity,violations,blocker_violations,critical_violations,class_complexity')
       .then(response => response.json())
       .then(json => {
           const metrics = {};
@@ -27,6 +27,9 @@ class ProjectRow extends Component {
                 <td style={{textAlign: "right"}}>{metrics.ncloc}</td>
                 <td style={{textAlign: "right"}}>{metrics.complexity}</td>
                 <td style={{textAlign: "right"}}>{metrics.violations}</td>
+                <td style={{textAlign: "right"}}>{metrics.blocker_violations}</td>
+                <td style={{textAlign: "right"}}>{metrics.critical_violations}</td>
+                <td style={{textAlign: "right"}}>{metrics.class_complexity}</td>
             </tr>;
     }
 }

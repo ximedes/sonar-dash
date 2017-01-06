@@ -28,11 +28,14 @@ class App extends Component {
             <td style={{textAlign: "right"}}>Lines of code</td>
             <td style={{textAlign: "right"}}>Complexity</td>
             <td style={{textAlign: "right"}}>Violations</td>
+            <td style={{textAlign: "right"}}>Blocker Violations</td>
+            <td style={{textAlign: "right"}}>Critical Violations</td>
+            <td style={{textAlign: "right"}}>Complexity / Class</td>
           </tr>
         </thead>
         <tbody>
           {this.state.projects.map(p => {
-              return <ProjectRow key={p.id} project={p} />;
+              return <ProjectRow key={p.id} project={p} metrics={[ncloc,complexity,violations,blocker_violations,critical_violations,class_complexity]}/>;
             })
           }
           </tbody>
