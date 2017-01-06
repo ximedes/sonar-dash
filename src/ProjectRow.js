@@ -10,7 +10,7 @@ class ProjectRow extends Component {
 
     componentDidMount() {
       const key = this.props.project.k;
-      fetch('/api/measures/component?componentKey=' + key + '&metricKeys=ncloc,complexity,violations,blocker_violations,critical_violations,class_complexity')
+      fetch('/api/measures/component?componentKey=' + key + '&metricKeys=' + this.props.metrics.join(','))
       .then(response => response.json())
       .then(json => {
           const metrics = {};
@@ -24,12 +24,7 @@ class ProjectRow extends Component {
       const metrics = this.state.metrics;
       return <tr>
                 <td title={p.k} style={{textAlign: "left"}}>{p.nm}</td>
-                <td style={{textAlign: "right"}}>{metrics.ncloc}</td>
-                <td style={{textAlign: "right"}}>{metrics.complexity}</td>
-                <td style={{textAlign: "right"}}>{metrics.violations}</td>
-                <td style={{textAlign: "right"}}>{metrics.blocker_violations}</td>
-                <td style={{textAlign: "right"}}>{metrics.critical_violations}</td>
-                <td style={{textAlign: "right"}}>{metrics.class_complexity}</td>
+                {this.props.metrics.map(metricKey => <td key={metricKey} style={{textAlign: "right"}}>{metrics[metricKey]}</td>)}
             </tr>;
     }
 }

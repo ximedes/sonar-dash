@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import ProjectRow from './ProjectRow';
+import HeaderRow from './HeaderRow';
 import './App.css';
 
 class App extends Component {
@@ -19,23 +19,14 @@ class App extends Component {
   }
 
   render() {
+    const metrics = ['ncloc','complexity','violations','blocker_violations','critical_violations','class_complexity','high_severity_vulns','overall_coverage'];
     return (
       <div className="App">
         <table style={{border: "1px solid black", marginLeft: "auto", marginRight: "auto"}}>
-        <thead>
-          <tr>
-            <td style={{textAlign: "left"}}>Name</td>
-            <td style={{textAlign: "right"}}>Lines of code</td>
-            <td style={{textAlign: "right"}}>Complexity</td>
-            <td style={{textAlign: "right"}}>Violations</td>
-            <td style={{textAlign: "right"}}>Blocker Violations</td>
-            <td style={{textAlign: "right"}}>Critical Violations</td>
-            <td style={{textAlign: "right"}}>Complexity / Class</td>
-          </tr>
-        </thead>
+        <HeaderRow metrics={metrics} />
         <tbody>
           {this.state.projects.map(p => {
-              return <ProjectRow key={p.id} project={p} metrics={[ncloc,complexity,violations,blocker_violations,critical_violations,class_complexity]}/>;
+              return <ProjectRow key={p.id} project={p} metrics={metrics} />;
             })
           }
           </tbody>
