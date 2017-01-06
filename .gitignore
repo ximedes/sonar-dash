@@ -10,6 +10,8 @@ coverage
 build
 
 # misc
+.idea
+sonar-dash.iml
 .DS_Store
 .env
 npm-debug.log
