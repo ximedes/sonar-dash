@@ -22,9 +22,9 @@ class ProjectRow extends Component {
     render() {
       const p = this.props.project;
       const metrics = this.state.metrics;
-      return <tr>
+      return <tr className={this.props.rowClass}>
                 <td title={p.k} style={{textAlign: "left"}}>{p.nm}</td>
-                {this.props.metrics.map(metricKey => <td key={metricKey} style={{textAlign: "right"}}>{metrics[metricKey]}</td>)}
+                {this.props.metrics.map(metricKey => <td key={metricKey}>{metrics[metricKey]}</td>)}
             </tr>;
     }
 }

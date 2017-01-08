@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://sonar.chess.int/",
+  "proxy": "http://10.91.21.211/",
   "devDependencies": {
     "react-scripts": "0.8.4"
   },

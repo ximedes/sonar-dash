@@ -26,7 +26,8 @@ class HeaderRow extends Component {
      return (
          <thead>
           <tr>
-            {this.props.metrics.map(metricKey => <td key={metricKey} style={{textAlign: "right"}}>{this.state.metrics[metricKey]}</td>)}
+            <th style={{textAlign: "left"}}>Name</th>
+            {this.props.metrics.map(metricKey => <td key={metricKey}>{this.state.metrics[metricKey]}</td>)}
           </tr>
         </thead>
         );
