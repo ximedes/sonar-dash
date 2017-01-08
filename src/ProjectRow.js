@@ -1,31 +1,46 @@
 import React, { Component } from 'react';
+import Numeral from 'numeral';
 
 class ProjectRow extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            metrics: {}
+            metricValues: {}
         };
     }
 
     componentDidMount() {
-      const key = this.props.project.k;
-      fetch('/api/measures/component?componentKey=' + key + '&metricKeys=' + this.props.metrics.join(','))
-      .then(response => response.json())
-      .then(json => {
-          const metrics = {};
-          json.component.measures.forEach(m => metrics[m.metric] = m.value);
-          this.setState({metrics: metrics});
+      const projectKey = this.props.project.k;
+
+      fetch('/api/measures/component?componentKey=' + projectKey + '&metricKeys=' + this.props.columns.join(','))
+        .then(response => response.json())
+        .then(json => {
+            const metricValues = {};
+            json.component.measures.forEach(measure => metricValues[measure.metric] = measure.value);
+            this.setState({metricValues});
         });
     }
 
     render() {
-      const p = this.props.project;
-      const metrics = this.state.metrics;
+      const project = this.props.project;
       return <tr className={this.props.rowClass}>
-                <td title={p.k} style={{textAlign: "left"}}>{p.nm}</td>
-                {this.props.metrics.map(metricKey => <td key={metricKey}>{metrics[metricKey]}</td>)}
+                <td title={project.k} style={{textAlign: "left"}}>{project.nm}</td>
+                {this.props.columns.map(metricKey => <td key={metricKey}>{this.format(metricKey, this.state.metricValues[metricKey])}</td>)}
             </tr>;
+    }
+
+    format(metricKey, value) {
+        const type = this.props.metrics[metricKey].type;
+        switch (type) {
+            case "INT":
+                return Numeral(value).format("0,0");
+            case "FLOAT":
+                return Numeral(value).format("0,0.0");
+            case "PERCENT":
+                return Numeral(value).format("0,0.0") + "%";
+            default:
+                return value;
+        }
     }
 }
 
