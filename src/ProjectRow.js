@@ -23,8 +23,13 @@ class ProjectRow extends Component {
 
     render() {
       const project = this.props.project;
+      // TODO fetch sonar.chess.int from the proxy setting in /package.json file
+      const projectlink = 'http://sonar.chess.int/dashboard?id='+ project.id;
+
       return <tr className={this.props.rowClass}>
-                <td title={project.k} style={{textAlign: "left"}}>{project.nm}</td>
+                <td title={project.k} style={{textAlign: "left"}}>
+                    <a href={projectlink}>{project.nm}</a>
+                </td>
                 {this.props.columns.map(metricKey => <td key={metricKey}>{this.format(metricKey, this.state.metricValues[metricKey])}</td>)}
             </tr>;
     }

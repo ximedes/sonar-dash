@@ -1,8 +1,8 @@
 {
-  "name": "my-app",
+  "name": "sonar-dash",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://10.91.21.211/",
+  "proxy": "http://sonar.chess.int/",
   "devDependencies": {
     "react-scripts": "0.8.4"
   },
