@@ -105,7 +105,7 @@ class App extends Component {
     var now = new Date();
     var diff = now.getTime() - then.getTime();
     if (diff < 60000) {
-      out += Math.floor(diff / 1000) + " sseconds ago";
+      out += Math.floor(diff / 1000) + " seconds ago";
     } else if (diff < 3600000) {
       out += Math.floor(diff / 60000) + " minutes ago";
     } else if (diff < 86400000) {
