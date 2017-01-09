@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ProjectRow from './ProjectRow';
 import HeaderRow from './HeaderRow';
+import ReactTable from 'react-table'
 import './pure-min-0.6.2.css';
 import './App.css';
 
@@ -29,7 +30,7 @@ class App extends Component {
 
     Promise.all([projPromise, metricsPromise])
       .then(values => this.setState({
-        projects: values[0], 
+        projects: values[0].slice(0,5), 
         metrics: values[1]
       }));
   }
@@ -37,6 +38,7 @@ class App extends Component {
   render() {
     const columns = ['ncloc','duplicated_lines_density', 'blocker_violations','critical_violations','class_complexity','high_severity_vulns','overall_coverage'];
     // const columns = ['ncloc','duplicated_lines_density,'blocker_violations','critical_violations','class_complexity','overall_coverage'];
+    const rtColumns = [{header: 'Name', headerStyle: {textAlign: 'left'}, accessor: 'nm', style: {textAlign: 'left'}}]
     return (
       <div>
         <div className="pure-g">&nbsp;</div>
@@ -53,6 +55,8 @@ class App extends Component {
                 })}
             </tbody>
           </table>
+          <br/>
+          <ReactTable tableClassName="pure-table pure-table-horizontal" trClassCallback={row => (row.viewIndex % 2 === 0) ? "pure-table-odd" : "" } data={this.state.projects} columns={rtColumns} minRows={0} showPagination={false} loading={false} />
           </div>
           <div className="pure-u-1-24"></div>
         </div>

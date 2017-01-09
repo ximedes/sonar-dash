@@ -1136,6 +1136,10 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
+classnames@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
+
 clean-css@3.4.x:
   version "3.4.23"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-3.4.23.tgz#604fbbca24c12feb59b02f00b84f1fb7ded6d001"
@@ -4223,6 +4227,12 @@ react-scripts@0.8.4:
     whatwg-fetch "1.0.0"
   optionalDependencies:
     fsevents "1.0.14"
+
+react-table@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-3.1.4.tgz#4ecf54d2b27d8747bdd03ec3f60bb53fe8f16a8c"
+  dependencies:
+    classnames "^2.2.5"
 
 react@^15.4.1:
   version "15.4.1"
