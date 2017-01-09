@@ -43,7 +43,8 @@ class App extends Component {
           header: 'Name', 
           headerStyle: {textAlign: 'left'},
           accessor: 'name',
-          style: {textAlign: 'left'}
+          style: {textAlign: 'left'},
+          render: rowData => <a href={'http://sonar.chess.int/dashboard?id='+rowData.row.id}>{rowData.value}</a>
         }
     ];
 
@@ -65,6 +66,15 @@ class App extends Component {
         render: row => <span>{this.formatDate(row.value)}</span>
       }
     );
+
+
+    const tableProps = {
+      tableClassName: "pure-table pure-table-horizontal",
+      trClassCallback: row => (row.viewIndex % 2 === 0) ? "pure-table-odd" : "" ,
+      minRows: 0,
+      pageSize: 200,
+      showPagination: false
+    }
     
     return (
       <div>
@@ -72,7 +82,7 @@ class App extends Component {
         <div className="pure-g">
           <div className="pure-u-1-24"></div>
           <div className="pure-u-22-24">
-          <ReactTable tableClassName="pure-table pure-table-horizontal" trClassCallback={row => (row.viewIndex % 2 === 0) ? "pure-table-odd" : "" } data={this.state.resources} columns={rtColumns} minRows={0} showPagination={false} loading={false} pageSize={200} />
+          <ReactTable data={this.state.resources} columns={rtColumns} {...tableProps} />
           </div>
           <div className="pure-u-1-24"></div>
         </div>
@@ -81,7 +91,7 @@ class App extends Component {
   }
 
   formatMetric(metricKey, value) {
-    if (value == undefined) {
+    if (value === undefined) {
       return undefined;
     }
     

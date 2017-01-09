@@ -4228,8 +4228,8 @@ react-scripts@0.8.4:
   optionalDependencies:
     fsevents "1.0.14"
 
-react-table@^3.1.4:
-  version "3.1.4"
+react-table@3.2.1:
+  version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-table/-/react-table-3.1.4.tgz#4ecf54d2b27d8747bdd03ec3f60bb53fe8f16a8c"
   dependencies:
     classnames "^2.2.5"
