@@ -51,18 +51,18 @@ class App extends Component {
       {
         id: c,
         header: this.state.metrics[c] ? this.state.metrics[c].name : "",
-        accessor: p => {
-          const measure = p.msr.find(m => m.key === c);
+        accessor: resource => {
+          const measure = resource.msr.find(m => m.key === c);
           return measure && measure.val;},
-        render: row => <span>{ this.formatMetric(c, row.value)}</span>
+        render: row => <span>{this.formatMetric(c, row.value)}</span>
       } ));
 
     rtColumns.push(
       {
         id: 'date',
         header: 'Last analysis',
-        accessor: p => new Date(p.date),
-        render: row => <span>{this.renderDate(row.value)}</span>
+        accessor: resource => new Date(resource.date),
+        render: row => <span>{this.formatDate(row.value)}</span>
       }
     );
     
@@ -98,7 +98,7 @@ class App extends Component {
     }
   }
 
-  renderDate(d) {
+  formatDate(d) {
     var then = new Date(0);
     then.setUTCMilliseconds(d);
     var out = "";
