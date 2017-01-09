@@ -35,8 +35,8 @@ class App extends Component {
   }
 
   render() {
-    const columns = ['ncloc','complexity','violations','blocker_violations','critical_violations','class_complexity','high_severity_vulns','overall_coverage'];
-    // const columns = ['ncloc','complexity','violations','blocker_violations','critical_violations','class_complexity','overall_coverage'];
+    const columns = ['ncloc','duplicated_lines_density', 'blocker_violations','critical_violations','class_complexity','high_severity_vulns','overall_coverage'];
+    // const columns = ['ncloc','duplicated_lines_density,'blocker_violations','critical_violations','class_complexity','overall_coverage'];
     return (
       <div>
         <div className="pure-g">&nbsp;</div>
