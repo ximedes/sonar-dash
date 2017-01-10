@@ -163,6 +163,8 @@ class App extends Component {
       out += Math.floor(diff / 60000) + " minutes ago";
     } else if (diff < 86400000) {
       out += Math.floor(diff / 3600000) + " hours ago";
+    } else if (diff < 604800000) { 
+      out += Math.floor(diff / 86400000) + " days ago";
     } else {
       out += then.toLocaleDateString('nl-NL');
     }
