@@ -5,3 +5,16 @@
 .pure-table thead {
     background-color: rgba(0, 0, 0, 0);
 }
+
+.table-row-status-ok {
+    background-color: rgb(239, 255, 219);
+}
+
+.table-row-status-warn {
+    background-color: rgb(237, 178, 130);
+}
+
+.table-row-status-error {
+    background-color: rgb(255, 86, 86);
+}
+

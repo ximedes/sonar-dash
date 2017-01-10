@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import Numeral from 'numeral';
 
+import iconGreen from './icon_green.svg';
+import iconOrange from './icon_orange.svg';
+import iconRed from './icon_red.svg';
+import iconGrey from './icon_grey.svg';
+
 import './pure-min-0.6.2.css';
 import './App.css';
 
@@ -14,7 +19,8 @@ class App extends Component {
     super(props);
     this.state = {
       projects: [],
-      metrics: {}
+      metrics: {},
+      statuses: []
     };
   }
 
@@ -34,11 +40,47 @@ class App extends Component {
       .then(values => this.setState({
         metrics: values[0],
         resources: values[1]
-      }));
+      }))
+      .then(() => {
+        const resources = this.state.resources;
+        const fetches = resources.map(res => 
+          fetch('/api/qualitygates/project_status?projectKey=' + res.key)
+          .then(res => res.json())
+          .then(value => Object.assign(value.projectStatus, {key: res.key}))
+        );
+        return Promise.all(fetches);
+      })
+      .then((statuses) => this.setState({statuses}));
   }
 
   render() {
     const rtColumns = [
+        {
+          id: 'status',
+          header: "",
+          accessor: row => {
+            const projectStatus = this.state.statuses.find(s => s.key === row.key);
+            return projectStatus ? projectStatus.status : 'NONE';
+          },
+          render: ({value}) => {
+            var icon;
+            switch (value) {
+              case 'OK':
+                icon = iconGreen;
+                break;
+              case 'WARN':
+                icon = iconOrange;
+                break;
+              case 'ERROR':
+                icon = iconRed;
+                break;
+              default:
+                icon = iconGrey;
+                break;
+            }
+            return <img style={{maxWidth: '1em', verticalAlign: 'middle'}} src={icon}  alt={value} />
+          }
+        },
         {
           header: 'Name', 
           headerStyle: {textAlign: 'left'},
@@ -71,7 +113,7 @@ class App extends Component {
 
     const tableProps = {
       tableClassName: "pure-table pure-table-horizontal",
-      trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? "pure-table-odd" : "" ,
+      trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? 'pure-table-odd' : '' ,
       minRows: 0,
       pageSize: 200,
       showPagination: false
