@@ -63,7 +63,8 @@ class App extends Component {
         id: 'date',
         header: 'Last analysis',
         accessor: resource => new Date(resource.date),
-        render: row => <span>{this.formatDate(row.value)}</span>
+        render: row => <span>{this.formatDate(row.value)}</span>,
+        sort: 'desc'
       }
     );
 
