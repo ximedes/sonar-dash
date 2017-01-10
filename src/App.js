@@ -44,7 +44,7 @@ class App extends Component {
           headerStyle: {textAlign: 'left'},
           accessor: 'name',
           style: {textAlign: 'left'},
-          render: rowData => <a href={'http://sonar.chess.int/dashboard?id='+rowData.row.id}>{rowData.value}</a>
+          render: ({value, row}) => <a href={'http://sonar.chess.int/dashboard?id='+row.id}>{value}</a>
         }
     ];
 
@@ -55,7 +55,7 @@ class App extends Component {
         accessor: resource => {
           const measure = resource.msr.find(m => m.key === c);
           return measure && measure.val;},
-        render: row => <span>{this.formatMetric(c, row.value)}</span>
+        render: ({value}) => <span>{this.formatMetric(c, value)}</span>
       } ));
 
     rtColumns.push(
@@ -63,7 +63,7 @@ class App extends Component {
         id: 'date',
         header: 'Last analysis',
         accessor: resource => new Date(resource.date),
-        render: row => <span>{this.formatDate(row.value)}</span>,
+        render: ({value}) => <span>{this.formatDate(value)}</span>,
         sort: 'desc'
       }
     );
@@ -71,7 +71,7 @@ class App extends Component {
 
     const tableProps = {
       tableClassName: "pure-table pure-table-horizontal",
-      trClassCallback: row => (row.viewIndex % 2 === 0) ? "pure-table-odd" : "" ,
+      trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? "pure-table-odd" : "" ,
       minRows: 0,
       pageSize: 200,
       showPagination: false
