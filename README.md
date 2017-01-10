@@ -1,3 +1,32 @@
+Sonar Dashboard resurrected
+===========================
+
+This project restores your beloved projects dashboard in SonarQube. To run
+it, clone this project, edit `package.json` to change the configuration, the
+example below points to our internal sonar installation:
+
+```
+"proxy": "http://sonar.chess.int/",
+```
+
+Then, run the following commands:
+
+```
+npm install
+npm start
+```
+
+A browser will open on localhost:3000 and will display the dashboard:
+
+![Screenshot of work in progress](README-dashboard.png)
+
+We hope to resurrect all of the original project dashboard. If you 
+want to help rebuilding the dashboard, send us your pull requests or 
+suggestions. 
+
+"Create React App" info
+-----------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
