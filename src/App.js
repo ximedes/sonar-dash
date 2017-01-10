@@ -25,6 +25,12 @@ class App extends Component {
   }
 
   componentDidMount() {
+    
+    // Should be refactored to use:
+    // /api/projects/index for project list
+    // /api/measures/component_tree?baseComponentKey=alphabet:carlease&qualifiers=TRK&metricKeys=ncloc&additionalFields=metrics for metrics def and values
+    // api/qualitygates/project_status for quality qate
+
     const metricsPromise = fetch('/api/metrics/search?f=name')
       .then( response => response.json())
       .then(json => json.metrics.reduce( (result, m) => { 
@@ -112,7 +118,7 @@ class App extends Component {
 
 
     const tableProps = {
-      tableClassName: "pure-table pure-table-horizontal",
+      tableClassName: "pure-table",
       trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? 'pure-table-odd' : '' ,
       minRows: 0,
       pageSize: 200,
