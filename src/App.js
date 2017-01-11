@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import Numeral from 'numeral';
 
-import {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus, fetchLastTaskDetails} from './fetch.js';
+import {fetchMetrics, fetchProjects} from './fetch.js';
 
 import iconGreen from './icon_green.svg';
 import iconOrange from './icon_orange.svg';
@@ -26,96 +26,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const metricsPromise = fetchMetrics();
-
-    const projectsPromise = fetchProjects()
-      .then(projects => {
-        return Promise.all(projects.map( p => 
-          fetchProjectMeasures(p.key, metricKeys).then(measures => Object.assign(p, {measures})
-        )))
-      });
-
-    Promise.all([metricsPromise, projectsPromise])
-      .then(values => {
-        this.setState({metrics: values[0]});
-        return values[1];
-      })
-      .then(projects => {
-        const fetches = projects.map(p => 
-          fetchProjectStatus(p.key).then(status => Object.assign(p, {status}))
-        );
-        return Promise.all(fetches);
-      })
-      .then(projects => {
-        const fetches = projects.map(p => 
-          fetchLastTaskDetails(p.key).then(task => Object.assign(p, {analysisDate: task && task.submittedAt}))
-        );
-        return Promise.all(fetches);
-      })
-      .then(projects => this.setState({projects}));
-    }
+    fetchMetrics().then(metrics => this.setState({metrics}));
+    fetchProjects(metricKeys).then(projects => this.setState({projects}));
+  }
 
   render() {
-    const rtColumns = [
-        {
-          id: 'status',
-          header: "",
-          accessor: project => {
-            if (project.status && project.status.status) {
-              return project.status.status;
-            } else {
-              return 'NONE';
-            }
-          },
-          render: ({value}) => {
-            var icon;
-            switch (value) {
-              case 'OK':
-                icon = iconGreen;
-                break;
-              case 'WARN':
-                icon = iconOrange;
-                break;
-              case 'ERROR':
-                icon = iconRed;
-                break;
-              default:
-                icon = iconGrey;
-                break;
-            }
-            return <img style={{maxWidth: '1em', verticalAlign: 'middle'}} src={icon}  alt={value} />
-          }
-        },
-        {
-          header: 'Name', 
-          headerStyle: {textAlign: 'left'},
-          accessor: 'name',
-          style: {textAlign: 'left'},
-          render: ({value, row}) => <a href={'http://sonar.chess.int/dashboard?id='+row.id}>{value}</a>
-        }
-    ];
-
-    metricKeys.forEach(c => rtColumns.push(
-      {
-        id: c,
-        header: this.state.metrics[c] ? this.state.metrics[c].name : "",
-        accessor: project => {
-          const measure = project.measures.measures.find(m => m.metric === c);
-          return measure && measure.value;},
-        render: ({value}) => <span>{this.formatMetric(c, value)}</span>
-      } ));
-
-    rtColumns.push(
-      {
-        id: 'date',
-        header: 'Last analysis',
-        accessor: project => project.analysisDate && new Date(project.analysisDate),
-        render: ({value}) => <span>{this.formatDate(value)}</span>,
-        sort: 'desc'
-      }
-    );
-
-
+    const columns = this.createColumnDefinition();
     const tableProps = {
       tableClassName: "pure-table",
       trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? 'pure-table-odd' : '' ,
@@ -130,7 +46,7 @@ class App extends Component {
         <div className="pure-g">
           <div className="pure-u-1-24"></div>
           <div className="pure-u-22-24">
-          <ReactTable data={this.state.projects} columns={rtColumns} {...tableProps} />
+          <ReactTable data={this.state.projects} columns={columns} {...tableProps} />
           </div>
           <div className="pure-u-1-24"></div>
         </div>
@@ -156,6 +72,33 @@ class App extends Component {
     }
   }
 
+  getProjectStatus(project) {
+    if (project.status && project.status.status) {
+      return project.status.status;
+    } else {
+      return 'NONE';
+    }    
+  }
+
+  renderProjectStatus(status) {
+    var icon;
+    switch (status) {
+      case 'OK':
+        icon = iconGreen;
+        break;
+      case 'WARN':
+        icon = iconOrange;
+        break;
+      case 'ERROR':
+        icon = iconRed;
+        break;
+      default:
+        icon = iconGrey;
+        break;
+    }
+    return <img style={{maxWidth: '1em', verticalAlign: 'middle'}} src={icon}  alt={status} />
+  }
+
   formatDate(d) {
     if (!d) {
       return '-';
@@ -177,6 +120,45 @@ class App extends Component {
       out += then.toLocaleDateString('nl-NL');
     }
     return out;
+  }
+
+  createColumnDefinition() {
+    const columns = [
+        {
+          id: 'status',
+          header: "",
+          accessor: project => this.getProjectStatus(project),
+          render: ({value}) => this.renderProjectStatus(value)
+        },
+        {
+          header: 'Name', 
+          headerStyle: {textAlign: 'left'},
+          accessor: 'name',
+          style: {textAlign: 'left'},
+          render: ({value, row}) => <a href={'http://sonar.chess.int/dashboard?id='+row.id}>{value}</a>
+        }
+    ];
+
+    metricKeys.forEach(key => columns.push(
+      {
+        id: key,
+        header: this.state.metrics[key] ? this.state.metrics[key].name : "",
+        accessor: project => {
+          const measure = project.measures.measures.find(m => m.metric === key);
+          return measure && measure.value;},
+        render: ({value}) => <span>{this.formatMetric(key, value)}</span>
+      } ));
+
+    columns.push(
+      {
+        id: 'date',
+        header: 'Last analysis',
+        accessor: project => project.analysisDate && new Date(project.analysisDate),
+        render: ({value}) => <span>{this.formatDate(value)}</span>,
+        sort: 'desc'
+      }
+    );
+    return columns;    
   }
 
 }
