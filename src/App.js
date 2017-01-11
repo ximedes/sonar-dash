@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import Numeral from 'numeral';
 
+import {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus} from './fetch.js';
+
 import iconGreen from './icon_green.svg';
 import iconOrange from './icon_orange.svg';
 import iconRed from './icon_red.svg';
@@ -19,54 +21,46 @@ class App extends Component {
     super(props);
     this.state = {
       projects: [],
-      metrics: {},
-      statuses: []
+      metrics: {}
     };
   }
 
   componentDidMount() {
-    
-    // Should be refactored to use:
-    // /api/projects/index for project list
-    // /api/measures/component_tree?baseComponentKey=alphabet:carlease&qualifiers=TRK&metricKeys=ncloc&additionalFields=metrics for metrics def and values
-    // api/qualitygates/project_status for quality qate
+    const metricsPromise = fetchMetrics();
 
-    const metricsPromise = fetch('/api/metrics/search?f=name')
-      .then( response => response.json())
-      .then(json => json.metrics.reduce( (result, m) => { 
-            result[m.key] = m;
-            return result;
-          }, {})
-      );
+    const projectsPromise = fetchProjects()
+      .then(projects => {
+        return Promise.all(projects.map( p => 
+          fetchProjectMeasures(p.key, metricKeys).then(measures => Object.assign(p, {measures})
+        )))
+      });
 
-    const resPromise = fetch('/api/resources/index?qualifiers=TRK&metrics=' + metricKeys.join(','))
-      .then(response => response.json());
-
-    Promise.all([metricsPromise, resPromise])
+    Promise.all([metricsPromise, projectsPromise])
       .then(values => this.setState({
         metrics: values[0],
-        resources: values[1]
+        projects: values[1]
       }))
       .then(() => {
-        const resources = this.state.resources;
-        const fetches = resources.map(res => 
-          fetch('/api/qualitygates/project_status?projectKey=' + res.key)
-          .then(res => res.json())
-          .then(value => Object.assign(value.projectStatus, {key: res.key}))
+        const fetches = this.state.projects.map(p => 
+          fetchProjectStatus(p.key).then(status => Object.assign(p, {status}))
         );
         return Promise.all(fetches);
       })
-      .then((statuses) => this.setState({statuses}));
-  }
+      .then(projects => this.setState({projects}))
+      .then(() => console.log(this.state));
+    }
 
   render() {
     const rtColumns = [
         {
           id: 'status',
           header: "",
-          accessor: row => {
-            const projectStatus = this.state.statuses.find(s => s.key === row.key);
-            return projectStatus ? projectStatus.status : 'NONE';
+          accessor: project => {
+            if (project.status && project.status.status) {
+              return project.status.status;
+            } else {
+              return 'NONE';
+            }
           },
           render: ({value}) => {
             var icon;
@@ -100,9 +94,9 @@ class App extends Component {
       {
         id: c,
         header: this.state.metrics[c] ? this.state.metrics[c].name : "",
-        accessor: resource => {
-          const measure = resource.msr.find(m => m.key === c);
-          return measure && measure.val;},
+        accessor: project => {
+          const measure = project.measures.measures.find(m => m.metric === c);
+          return measure && measure.value;},
         render: ({value}) => <span>{this.formatMetric(c, value)}</span>
       } ));
 
@@ -110,7 +104,7 @@ class App extends Component {
       {
         id: 'date',
         header: 'Last analysis',
-        accessor: resource => new Date(resource.date),
+        accessor: project => new Date(),
         render: ({value}) => <span>{this.formatDate(value)}</span>,
         sort: 'desc'
       }
@@ -131,7 +125,7 @@ class App extends Component {
         <div className="pure-g">
           <div className="pure-u-1-24"></div>
           <div className="pure-u-22-24">
-          <ReactTable data={this.state.resources} columns={rtColumns} {...tableProps} />
+          <ReactTable data={this.state.projects} columns={rtColumns} {...tableProps} />
           </div>
           <div className="pure-u-1-24"></div>
         </div>
