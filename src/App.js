@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import Numeral from 'numeral';
 
-import {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus} from './fetch.js';
+import {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus, fetchLastTaskDetails} from './fetch.js';
 
 import iconGreen from './icon_green.svg';
 import iconOrange from './icon_orange.svg';
@@ -36,18 +36,23 @@ class App extends Component {
       });
 
     Promise.all([metricsPromise, projectsPromise])
-      .then(values => this.setState({
-        metrics: values[0],
-        projects: values[1]
-      }))
-      .then(() => {
-        const fetches = this.state.projects.map(p => 
+      .then(values => {
+        this.setState({metrics: values[0]});
+        return values[1];
+      })
+      .then(projects => {
+        const fetches = projects.map(p => 
           fetchProjectStatus(p.key).then(status => Object.assign(p, {status}))
         );
         return Promise.all(fetches);
       })
-      .then(projects => this.setState({projects}))
-      .then(() => console.log(this.state));
+      .then(projects => {
+        const fetches = projects.map(p => 
+          fetchLastTaskDetails(p.key).then(task => Object.assign(p, {analysisDate: task && task.submittedAt}))
+        );
+        return Promise.all(fetches);
+      })
+      .then(projects => this.setState({projects}));
     }
 
   render() {
@@ -104,7 +109,7 @@ class App extends Component {
       {
         id: 'date',
         header: 'Last analysis',
-        accessor: project => new Date(),
+        accessor: project => project.analysisDate && new Date(project.analysisDate),
         render: ({value}) => <span>{this.formatDate(value)}</span>,
         sort: 'desc'
       }
@@ -152,6 +157,9 @@ class App extends Component {
   }
 
   formatDate(d) {
+    if (!d) {
+      return '-';
+    }
     var then = new Date(0);
     then.setUTCMilliseconds(d);
     var out = "";

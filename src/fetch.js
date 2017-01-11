@@ -24,4 +24,10 @@ function fetchProjectStatus(projectKey) {
     .then(status => status.projectStatus);
 }
 
-export {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus}
+function fetchLastTaskDetails(projectKey) {
+  return fetch('api/ce/component?componentKey=' + projectKey)
+    .then(response => response.json())
+    .then(tasks => tasks.current);
+}
+
+export {fetchMetrics, fetchProjects, fetchProjectMeasures, fetchProjectStatus, fetchLastTaskDetails}
