@@ -87,7 +87,7 @@ class App extends Component {
       case 'WARN':
         return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconOrange}  alt={status} />;
       case 'ERROR':
-        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconOrange}  alt={status} />;
+        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconRed}  alt={status} />;
       default:
         return <span />;
     }
