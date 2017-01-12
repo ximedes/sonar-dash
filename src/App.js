@@ -80,7 +80,6 @@ class App extends Component {
   }
 
   renderProjectStatus(status) {
-    var icon;
     switch (status) {
       case 'OK':
         return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconGreen}  alt={status} />;
