@@ -146,7 +146,7 @@ class App extends Component {
     columns.push(
       {
         id: 'date',
-        header: 'Last analysis',
+        header: <span>Last&nbsp;Analysis</span>,
         accessor: project => project.analysisDate && new Date(project.analysisDate),
         render: ({value}) => <span>{this.formatDate(value)}</span>,
         sort: 'desc'
