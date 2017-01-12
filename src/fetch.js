@@ -15,7 +15,7 @@ function fetchProjectList() {
 function fetchProjectMeasures(projectKey, metricKeys) {
   return fetch('/api/measures/component?componentKey='+projectKey+'&qualifiers=TRK&metricKeys='+metricKeys.join(','))
         .then(response => response.json())
-        .then(result => result.component);
+        .then(result => result.component && result.component.measures);
 }
 
 function fetchProjectStatus(projectKey) {

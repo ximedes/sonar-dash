@@ -8,7 +8,19 @@ a, .pure-table th {
     color: #236a97;
 }
 
+.metric-warn {
+    background-color: #f90;
+    color: #fff;
+    margin: 0;
+    padding: 0 3px;
+}
 
+.metric-error {
+    background-color: #d4333f;
+    color: #fff;
+    margin: 0;
+    padding: 0 3px;
+}
 
 .pure-table td, .pure-table th {
     text-align: right;

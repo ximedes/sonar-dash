@@ -137,9 +137,10 @@ class App extends Component {
         id: key,
         header: this.state.metrics[key] ? this.state.metrics[key].name : "",
         accessor: project => {
-          const measure = project.measures.measures.find(m => m.metric === key);
-          return measure && measure.value;},
-        render: ({value}) => <span>{this.formatMetric(key, value)}</span>
+          const measure = project.measures.find(m => m.metric === key);
+          return measure && measure.value;
+        },
+        render: ({value, row}) => <span className={this.getMetricClass(row, key)}>{this.formatMetric(key, value)}</span>
       } ));
 
     columns.push(
@@ -152,6 +153,20 @@ class App extends Component {
       }
     );
     return columns;    
+  }
+
+  getMetricClass(project, metricKey) {
+    const condition = project.status.conditions && project.status.conditions.find(c => c.metricKey===metricKey);
+    const status = condition && condition.status;
+    
+    switch (status) {
+      case 'WARN':
+        return 'metric-warn';
+      case 'ERROR':
+        return 'metric-error';
+      default:
+        return '';
+    }
   }
 
 }
