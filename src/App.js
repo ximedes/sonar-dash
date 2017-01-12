@@ -4,10 +4,9 @@ import Numeral from 'numeral';
 
 import {fetchMetrics, fetchProjects} from './fetch.js';
 
-import iconGreen from './icon_green.svg';
-import iconOrange from './icon_orange.svg';
-import iconRed from './icon_red.svg';
-import iconGrey from './icon_grey.svg';
+import iconGreen from './icon_green.png';
+import iconOrange from './icon_orange.png';
+import iconRed from './icon_red.png';
 
 import './pure-min-0.6.2.css';
 import './App.css';
@@ -84,19 +83,14 @@ class App extends Component {
     var icon;
     switch (status) {
       case 'OK':
-        icon = iconGreen;
-        break;
+        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconGreen}  alt={status} />;
       case 'WARN':
-        icon = iconOrange;
-        break;
+        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconOrange}  alt={status} />;
       case 'ERROR':
-        icon = iconRed;
-        break;
+        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconOrange}  alt={status} />;
       default:
-        icon = iconGrey;
-        break;
+        return <span />;
     }
-    return <img style={{maxWidth: '1em', verticalAlign: 'middle'}} src={icon}  alt={status} />
   }
 
   formatDate(d) {
