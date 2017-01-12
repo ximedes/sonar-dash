@@ -1,5 +1,16 @@
+.pure-g [class*="pure-u"] {
+    font-family: "Helvetica Neue","Segoe UI","Helvetica","Arial","sans-serif";
+    font-size: 13px;
+    color: #444;
+}
+
+a, .pure-table th {
+    color: #236a97;
+}
+
+
+
 .pure-table td, .pure-table th {
-    font-size: 12px;
     text-align: right;
 }
 
