@@ -12,7 +12,7 @@ import './pure-min-0.6.2.css';
 import './App.css';
 
 
-const metricKeys = ['ncloc','duplicated_lines_density', 'blocker_violations','critical_violations','class_complexity','high_severity_vulns','overall_coverage'];
+const metricKeys = ['ncloc','duplicated_lines_density', 'blocker_violations','critical_violations','class_complexity','high_severity_vulns','coverage'];
 
 class App extends Component {
 
