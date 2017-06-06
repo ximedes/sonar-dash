@@ -1,21 +1,27 @@
-import React, { Component } from 'react';
-import ReactTable from 'react-table';
-import Numeral from 'numeral';
+import React, { Component } from "react";
+import ReactTable from "react-table";
+import Numeral from "numeral";
 
-import {fetchMetrics, fetchProjects} from './fetch.js';
+import { fetchMetrics, fetchProjects } from "./fetch.js";
 
-import iconGreen from './icon_green.png';
-import iconOrange from './icon_orange.png';
-import iconRed from './icon_red.png';
+import iconGreen from "./icon_green.png";
+import iconOrange from "./icon_orange.png";
+import iconRed from "./icon_red.png";
 
-import './pure-min-0.6.2.css';
-import './App.css';
+import "./pure-min-0.6.2.css";
+import "./App.css";
 
-
-const metricKeys = ['ncloc','duplicated_lines_density', 'blocker_violations','critical_violations','class_complexity','high_severity_vulns','coverage'];
+const metricKeys = [
+  "ncloc",
+  "duplicated_lines_density",
+  "blocker_violations",
+  "critical_violations",
+  "class_complexity",
+  "high_severity_vulns",
+  "coverage"
+];
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -25,29 +31,34 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetchMetrics().then(metrics => this.setState({metrics}));
-    fetchProjects(metricKeys).then(projects => this.setState({projects}));
+    fetchMetrics().then(metrics => this.setState({ metrics }));
+    fetchProjects(metricKeys).then(projects => this.setState({ projects }));
   }
 
   render() {
     const columns = this.createColumnDefinition();
     const tableProps = {
       tableClassName: "pure-table",
-      trClassCallback: ({viewIndex}) => (viewIndex % 2 === 0) ? 'pure-table-odd' : '' ,
+      trClassCallback: ({ viewIndex }) =>
+        viewIndex % 2 === 0 ? "pure-table-odd" : "",
       minRows: 0,
       pageSize: 200,
       showPagination: false
-    }
-    
+    };
+
     return (
       <div>
         <div className="pure-g">&nbsp;</div>
         <div className="pure-g">
-          <div className="pure-u-1-24"></div>
+          <div className="pure-u-1-24" />
           <div className="pure-u-22-24">
-          <ReactTable data={this.state.projects} columns={columns} {...tableProps} />
+            <ReactTable
+              data={this.state.projects}
+              columns={columns}
+              {...tableProps}
+            />
           </div>
-          <div className="pure-u-1-24"></div>
+          <div className="pure-u-1-24" />
         </div>
       </div>
     );
@@ -57,17 +68,17 @@ class App extends Component {
     if (value === undefined) {
       return undefined;
     }
-    
+
     const type = this.state.metrics[metricKey].type;
     switch (type) {
-        case "INT":
-            return Numeral(value).format("0,0");
-        case "FLOAT":
-            return Numeral(value).format("0,0.0");
-        case "PERCENT":
-            return Numeral(value).format("0,0.0") + "%";
-        default:
-            return value;
+      case "INT":
+        return Numeral(value).format("0,0");
+      case "FLOAT":
+        return Numeral(value).format("0,0.0");
+      case "PERCENT":
+        return Numeral(value).format("0,0.0") + "%";
+      default:
+        return value;
     }
   }
 
@@ -75,18 +86,36 @@ class App extends Component {
     if (project.status && project.status.status) {
       return project.status.status;
     } else {
-      return 'NONE';
-    }    
+      return "NONE";
+    }
   }
 
   renderProjectStatus(status) {
     switch (status) {
-      case 'OK':
-        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconGreen}  alt={status} />;
-      case 'WARN':
-        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconOrange}  alt={status} />;
-      case 'ERROR':
-        return <img style={{maxWidth: '1.1em', verticalAlign: 'middle'}} src={iconRed}  alt={status} />;
+      case "OK":
+        return (
+          <img
+            style={{ maxWidth: "1.1em", verticalAlign: "middle" }}
+            src={iconGreen}
+            alt={status}
+          />
+        );
+      case "WARN":
+        return (
+          <img
+            style={{ maxWidth: "1.1em", verticalAlign: "middle" }}
+            src={iconOrange}
+            alt={status}
+          />
+        );
+      case "ERROR":
+        return (
+          <img
+            style={{ maxWidth: "1.1em", verticalAlign: "middle" }}
+            src={iconRed}
+            alt={status}
+          />
+        );
       default:
         return <span />;
     }
@@ -94,7 +123,7 @@ class App extends Component {
 
   formatDate(d) {
     if (!d) {
-      return '-';
+      return "-";
     }
     var then = new Date(0);
     then.setUTCMilliseconds(d);
@@ -107,60 +136,66 @@ class App extends Component {
       out += Math.floor(diff / 60000) + " minutes ago";
     } else if (diff < 86400000) {
       out += Math.floor(diff / 3600000) + " hours ago";
-    } else if (diff < 604800000) { 
+    } else if (diff < 604800000) {
       out += Math.floor(diff / 86400000) + " days ago";
     } else {
-      out += then.toLocaleDateString('nl-NL');
+      out += then.toLocaleDateString("nl-NL");
     }
     return out;
   }
 
   createColumnDefinition() {
     const columns = [
-        {
-          id: 'status',
-          header: "",
-          accessor: project => this.getProjectStatus(project),
-          render: ({value}) => this.renderProjectStatus(value)
-        },
-        {
-          header: 'Name', 
-          headerStyle: {textAlign: 'left'},
-          accessor: 'name',
-          style: {textAlign: 'left'},
-          render: ({value, row}) => <a href={'http://sonar.chess.int/dashboard?id='+row.id}>{value}</a>
-        }
+      {
+        id: "status",
+        header: "",
+        accessor: project => this.getProjectStatus(project),
+        render: ({ value }) => this.renderProjectStatus(value)
+      },
+      {
+        header: "Name",
+        headerStyle: { textAlign: "left" },
+        accessor: "name",
+        style: { textAlign: "left" },
+        render: ({ value, row }) =>
+          <a href={"http://sonar.chess.int/dashboard?id=" + encodeURI(row.key)}>
+            {value}
+          </a>
+      }
     ];
 
-    metricKeys.forEach(key => columns.push(
-      {
+    metricKeys.forEach(key =>
+      columns.push({
         id: key,
         header: this.state.metrics[key] ? this.state.metrics[key].name : "",
         accessor: project => {
           const measure = project.measures.find(m => m.metric === key);
           return measure && this.cast(measure.value, this.state.metrics[key]);
         },
-        render: ({value, row}) => <span className={this.getMetricClass(row, key)}>{this.formatMetric(key, value)}</span>
-      } ));
-
-    columns.push(
-      {
-        id: 'date',
-        header: <span>Last&nbsp;Analysis</span>,
-        accessor: project => project.analysisDate && new Date(project.analysisDate),
-        render: ({value}) => <span>{this.formatDate(value)}</span>,
-        sort: 'desc'
-      }
+        render: ({ value, row }) =>
+          <span className={this.getMetricClass(row, key)}>
+            {this.formatMetric(key, value)}
+          </span>
+      })
     );
-    return columns;    
+
+    columns.push({
+      id: "date",
+      header: <span>Last&nbsp;Analysis</span>,
+      accessor: project =>
+        project.analysisDate && new Date(project.analysisDate),
+      render: ({ value }) => <span>{this.formatDate(value)}</span>,
+      sort: "desc"
+    });
+    return columns;
   }
 
   cast(value, metric) {
     switch (metric.type) {
-      case 'INT':
-      case 'FLOAT':
-      case 'PERCENT':
-      case 'MILLISEC':
+      case "INT":
+      case "FLOAT":
+      case "PERCENT":
+      case "MILLISEC":
         return value && Number(value);
       default:
         return value;
@@ -168,18 +203,20 @@ class App extends Component {
   }
 
   getMetricClass(project, metricKey) {
-    const condition = project.status.conditions && project.status.conditions.find(c => c.metricKey===metricKey);
+    const condition =
+      project.status.conditions &&
+      project.status.conditions.find(c => c.metricKey === metricKey);
     const status = condition && condition.status;
-    
+
     switch (status) {
-      case 'WARN':
-        return 'metric-warn';
-      case 'ERROR':
-        return 'metric-error';
+      case "WARN":
+        return "metric-warn";
+      case "ERROR":
+        return "metric-error";
       default:
-        return '';
+        return "";
     }
   }
-T}
+}
 
 export default App;
