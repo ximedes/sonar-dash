@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import ReactTable from "react-table";
-import Numeral from "numeral";
+import './App.css';
+import './pure-min-0.6.2.css';
 
-import { fetchMetrics, fetchProjects } from "./fetch.js";
+import Numeral from 'numeral';
+import React, { Component } from 'react';
+import ReactTable from 'react-table';
 
-import iconGreen from "./icon_green.png";
-import iconOrange from "./icon_orange.png";
-import iconRed from "./icon_red.png";
-
-import "./pure-min-0.6.2.css";
-import "./App.css";
+import { fetchMetrics, fetchProjects } from './fetch.js';
+import iconGreen from './icon_green.png';
+import iconOrange from './icon_orange.png';
+import iconRed from './icon_red.png';
 
 const metricKeys = [
   "ncloc",
@@ -157,10 +156,15 @@ class App extends Component {
         headerStyle: { textAlign: "left" },
         accessor: "name",
         style: { textAlign: "left" },
-        render: ({ value, row }) =>
-          <a href={"http://sonar.chess.int/dashboard?id=" + encodeURI(row.key)}>
+        render: ({ value, row }) => (
+          <a
+            href={
+              "https://sonar.ximedes.com/dashboard?id=" + encodeURI(row.key)
+            }
+          >
             {value}
           </a>
+        )
       }
     ];
 
@@ -172,10 +176,11 @@ class App extends Component {
           const measure = project.measures.find(m => m.metric === key);
           return measure && this.cast(measure.value, this.state.metrics[key]);
         },
-        render: ({ value, row }) =>
+        render: ({ value, row }) => (
           <span className={this.getMetricClass(row, key)}>
             {this.formatMetric(key, value)}
           </span>
+        )
       })
     );
 
