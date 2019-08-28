@@ -1,14 +1,14 @@
-import './App.css';
-import './pure-min-0.6.2.css';
+import "./App.css";
+import "./pure-min-0.6.2.css";
 
-import Numeral from 'numeral';
-import React, { Component } from 'react';
-import ReactTable from 'react-table';
+import Numeral from "numeral";
+import React, { Component } from "react";
+import ReactTable from "react-table";
 
-import { fetchMetrics, fetchProjects } from './fetch.js';
-import iconGreen from './icon_green.png';
-import iconOrange from './icon_orange.png';
-import iconRed from './icon_red.png';
+import { fetchMetrics, fetchProjects } from "./fetch.js";
+import iconGreen from "./icon_green.png";
+import iconOrange from "./icon_orange.png";
+import iconRed from "./icon_red.png";
 
 const metricKeys = [
   "ncloc",
@@ -35,6 +35,8 @@ class App extends Component {
   }
 
   render() {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - 30);
     const columns = this.createColumnDefinition();
     const tableProps = {
       tableClassName: "pure-table",
@@ -52,7 +54,9 @@ class App extends Component {
           <div className="pure-u-1-24" />
           <div className="pure-u-22-24">
             <ReactTable
-              data={this.state.projects}
+              data={this.state.projects.filter(
+                p => p.analysisDate && new Date(p.analysisDate) > cutoffDate
+              )}
               columns={columns}
               {...tableProps}
             />

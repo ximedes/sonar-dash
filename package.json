@@ -2,10 +2,10 @@
   "name": "sonar-dash",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://10.91.21.211/",
+  "proxy": "https://sonar.ximedes.com/",
   "homepage": "https://sonar.ximedes.com/static/dash",
   "devDependencies": {
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.1.1"
   },
   "dependencies": {
     "numeral": "2.0.4",
