@@ -44,7 +44,8 @@ class App extends Component {
         viewIndex % 2 === 0 ? "pure-table-odd" : "",
       minRows: 0,
       pageSize: 200,
-      showPagination: false
+      showPagination: false,
+      loadingText: ""
     };
 
     return (
