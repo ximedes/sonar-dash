@@ -12,10 +12,10 @@ import iconRed from "./icon_red.png";
 
 const metricKeys = [
   "ncloc",
+  "cognitive_complexity",
   "duplicated_lines_density",
   "blocker_violations",
   "critical_violations",
-  "class_complexity",
   "high_severity_vulns",
   "coverage"
 ];
@@ -30,8 +30,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetchMetrics().then(metrics => this.setState({ metrics }));
-    fetchProjects(metricKeys).then(projects => this.setState({ projects }));
+    this.intervalID = setInterval(() => this.fetchAll(), 1000 * 60 * 15);
+    this.fetchAll();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+
+  fetchAll() {
+    fetchMetrics().then(metrics => {
+      fetchProjects(metricKeys).then(projects =>
+        this.setState({ metrics, projects })
+      );
+    });
   }
 
   render() {
@@ -61,6 +73,7 @@ class App extends Component {
               columns={columns}
               {...tableProps}
             />
+            <p>Last update: {new Date().toLocaleString("nl-nl")}</p>
           </div>
           <div className="pure-u-1-24" />
         </div>
