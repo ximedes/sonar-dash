@@ -5,7 +5,7 @@
   "proxy": "https://sonar.ximedes.com/",
   "homepage": "https://sonar.ximedes.com/static/dash",
   "devDependencies": {
-    "react-scripts": "3.1.1"
+    "react-scripts": "5.0.1"
   },
   "dependencies": {
     "numeral": "2.0.4",
